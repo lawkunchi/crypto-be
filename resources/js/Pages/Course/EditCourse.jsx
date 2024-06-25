@@ -1,29 +1,27 @@
 import React from "react";
-import { Head, usePage, useForm } from "@inertiajs/react";
+import { usePage, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import TextInput from "@/Components/TextInput";
 import InputLabel from "@/Components/InputLabel";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 export default function EditCourse({ course, auth }) {
-    const { props } = usePage();
-    const { flash } = props;
+    const { flash } = usePage().props;
 
-    const { data, setData, patch, processing, errors } = useForm({
+    const { data, setData, post , processing, errors } = useForm({
         name: course.name || "",
-        image: course.image || null,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route("course.update", course.id), {
+        post(route("course.update", course.id), {
             transform: (data) => {
                 const formData = new FormData();
                 Object.keys(data).forEach((key) =>
                     formData.append(key, data[key])
                 );
                 if (!data.image) {
-                    formData.delete("image"); 
+                    formData.delete("image");
                 }
                 return formData;
             },
@@ -47,8 +45,13 @@ export default function EditCourse({ course, auth }) {
                 onSubmit={submit}
                 className="p-12 bg-white border-b border-gray-100"
             >
-                {flash?.message && (
-                    <div className="alert alert-success">{flash?.message}</div>
+                {flash.message && (
+                    <div
+                        class="p-4 mb-4 mt-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                        role="alert"
+                    >
+                        <span class="font-medium">{flash.message}</span>
+                    </div>
                 )}
 
                 <div>

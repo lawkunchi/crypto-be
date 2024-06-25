@@ -10,27 +10,22 @@ use App\Models\UserCourse;
 class UserCourseService
 {
    
-    public function createUserCourse(Request $request)
+    public function createUserCourse(Course $course)
     {
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = auth()->id(); 
-        $userCourse = UserCourse::create($validatedData);
+        $userCourse = new UserCourse();
+        $userCourse->user_id = auth()->id();
+        $userCourse->course_id = $course->id;
+        $userCourse->save();
         return new UserCourseResource($userCourse);
     }
 
-    public function removeCourse(UserCourse $userCourse)
+    public function removeCourse(Course $course)
     {
-        $userCourse->delete();
+        $userCourse = UserCourse::where('user_id', auth()->id())
+            ->where('course_id', $course->id)
+            ->first();
+        $userCourse->forceDelete();
         return response()->json(['message' => 'Course deleted successfully.'], 200);
     }
-
-    public function updateUserCourse(Request $request, UserCourse $userCourse)
-    {
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = auth()->id(); 
-        $userCourse->update($validatedData);
-        return new UserCourseResource($userCourse);
-    }
-
    
 }

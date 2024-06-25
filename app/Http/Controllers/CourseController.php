@@ -91,7 +91,8 @@ class CourseController extends Controller
     public function store(StoreCourseRequest $request): RedirectResponse
     {
         $this->courseService->createCourse($request);
-        return back()->with('message', 'Course created successfully!');
+        return redirect(route('course.list' ))->with('message','Course created successfully!');
+
     }
 
 
@@ -116,7 +117,7 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        return new CourseResource($course->load('userCourses'));
+        return new CourseResource($course);
     }
 
     /**

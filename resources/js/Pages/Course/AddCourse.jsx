@@ -24,7 +24,6 @@ export default function AddCourse({ auth }) {
                 );
                 return formData;
             },
-            onSuccess: () => setData({ name: "", image: null }),
         });
     };
 

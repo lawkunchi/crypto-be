@@ -20,36 +20,20 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::get('/dashboard/courses/{id}', function ($id) {
-    return Inertia::render('CourseDetail', ['courseId' => $id]);
-})->middleware(['auth', 'verified'])->name('course.detail');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::controller(CourseController::class)->group(function () {
+        Route::get('/course/edit/{course}', 'edit')->name('course.edit');
+        Route::get('/course/add', 'add')->name('course.add');
+        Route::get('/dashboard/courses', 'list')->name('course.list');
+        Route::delete('/course/{course}', 'destroy')->name('course.delete');
+        Route::get('/course/{course}', 'view')->name('course.view');
+        Route::post('/course', 'store')->name('course.store');
+        Route::post('/course/{course}', 'update')->name('course.update');
+    });
 });
-
-Route::get('/course/edit/{course}', [CourseController::class, 'edit'])
-    ->name('course.edit');
-
-Route::get('/course/add', [CourseController::class, 'add'])
-    ->name('course.add');
-
-
-Route::get('/dashboard/courses', [CourseController::class, 'list'])
-    ->name('course.list');
-
-Route::delete('/course/{course}', [CourseController::class, 'destroy'])
-    ->name('course.delete');
-
-    Route::get('/course/{course}', [CourseController::class, 'view'])
-    ->name('course.view');
-
-Route::post('/course', [CourseController::class, 'store'])
-    ->name('course.store');
-
-    Route::patch('/course/{course}', [CourseController::class, 'update'])
-    ->name('course.update');
 
 require __DIR__ . '/auth.php';

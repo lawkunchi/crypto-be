@@ -20,9 +20,6 @@ class CourseResource extends JsonResource
             'image' => $this->image,
             'count' => $this->users->count(),
             'is_user_registered' => $this->isUserRegistered(),
-            'user_course' => $this->whenLoaded('userCourses', function () {
-                return $this->userCourses->where('user_id', auth()->id())->first();
-            }),
         ];
     }
 }

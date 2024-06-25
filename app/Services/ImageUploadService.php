@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ImageUploadService
 {
-    public function uploadImage(Request $request, $fieldName = 'image', $directory = 'public/courses')
+    public function uploadImage(Request $request, $fieldName = 'image', $directory = 'courses')
     {
         if ($request->hasFile($fieldName)) {
-            $path = $request->file($fieldName)->store($directory);
-            return Storage::url($path);
+            $file = $request->file($fieldName);
+            $imageName = time().'.'.$file->extension();  
+            $file->move(public_path($directory), $imageName);
+            $path =  config('app.url').'/'.$directory.'/'.$imageName;
+            return $path;
         }
-
         return null;
     }
 }

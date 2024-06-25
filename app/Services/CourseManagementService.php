@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Requests\StoreCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Resources\CourseResource;
@@ -15,26 +17,24 @@ class CourseManagementService
         $this->imageService = $imageService;
     }
 
-    public function createCourse(Request $request)
+    public function createCourse(StoreCourseRequest $request)
     {
-        $validatedData = $request->validated();
-        $imagePath = $this->imageService->uploadImage($request, 'image', 'public/courses');
-        if ($imagePath) {
-            $validatedData['image_path'] = $imagePath;
-        }
-
-       return Course::create($validatedData);
+        $imagePath = $this->imageService->uploadImage($request);
+        $course = new Course();
+        $course->name = $request->name;
+        $course->image = $imagePath;
+        $course->save();
+        return $course;
     }
 
-    public function updateCourse(Request $request, Course $course)
+    public function updateCourse(UpdateCourseRequest $request, Course $course)
     {
-        $validatedData = $request->validated();
-        $imagePath = $this->imageService->uploadImage($request, 'image', 'public/courses');
-        if ($imagePath) {
-            $validatedData['image_path'] = $imagePath;
+        $course->name = $request->name;
+        $imagePath = $this->imageService->uploadImage($request);
+        if($imagePath) {
+            $course->image = $imagePath;
         }
-
-        $course->update($validatedData);
+        $course->save();
         return $course;
     }
 }

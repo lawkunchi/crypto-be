@@ -29,19 +29,12 @@ class UserCourseController extends Controller
      * @param  UserCourseStoreRequest  $request
      * @return UserCourseResource
      */
-    public function register(UserCourseStoreRequest $request): UserCourseResource | JsonResponse
+    public function register(Course $course): UserCourseResource | JsonResponse
     {
-
-        try {
-            $course = Course::findOrFail($request->course_id);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['message' => 'Course not found.'], 404);
-        }
-
         if (Gate::denies('alreadyHasCourse', $course)) {
             return response()->json(['message' => 'You already registered to this course'], 403);
         }
-        return $this->userCourseService->createUserCourse($request);
+        return $this->userCourseService->createUserCourse($course);
     }
 
     /**
@@ -50,12 +43,12 @@ class UserCourseController extends Controller
      * @param  UserCourse  $userCourse
      * @return Response|JsonResponse
      */
-    public function unRegister(UserCourse $userCourse):  Response|JsonResponse
+    public function unRegister(Course $course):  Response|JsonResponse
     {
-        if (!$userCourse->course->isUserRegistered()) {
+        if (!$course->isUserRegistered()) {
             return response()->json(['message' => 'You are not registered to this course'], 403);
         }
-        return $this->userCourseService->removeCourse($userCourse);
+        return $this->userCourseService->removeCourse($course);
     }
 
 }
