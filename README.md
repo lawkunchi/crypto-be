@@ -19,8 +19,13 @@ Ensure you have [PHP](https://www.php.net/), [Composer](https://getcomposer.org/
      ```sh
      npm install
      ```
+3. **Seed the DB**
+    To seed courses:
+   ```sh
+   php artisan db:seed
+   ```
 
-3. **Start the Application:**
+4. **Start the Application:**
    To launch the application, run:
    ```sh
    php artisan serve
