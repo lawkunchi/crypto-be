@@ -22,7 +22,7 @@ Ensure you have [PHP](https://www.php.net/), [Composer](https://getcomposer.org/
 3. **Seed the DB**
     To seed courses:
    ```sh
-   php artisan db:seed
+   php artisan db:seed --class=CoursesTableSeeder
    ```
 
 4. **Start the Application:**
